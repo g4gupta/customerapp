@@ -33,7 +33,7 @@ func (cc CustomerController) Update(id string, c domain.Customer) {
 
 func (cc CustomerController) Get(custid ...string) {
 	if custid == nil {
-		if customers, err := cc.repository.GetAll(); err != nil {
+		if customers, err := cc.repository.GetAll(); err == nil {
 			for _, cust := range customers {
 				fmt.Println(cust.ID, "|", cust.Name, "|", cust.Email)
 			}
