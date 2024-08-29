@@ -2,6 +2,11 @@ package memstore
 
 import (
 	"customerapp/domain"
+	"errors"
+)
+
+var (
+	ErrEmptyRepository = errors.New("No data in Customer Repository")
 )
 
 // CustomerRepository provides memory based local data repository.
@@ -58,12 +63,15 @@ func (c *CustomerRepository) GetById(custid string) (domain.Customer, error) {
 	}
 }
 
-func (c *CustomerRepository) GetAll() []domain.Customer {
+func (c *CustomerRepository) GetAll() ([]domain.Customer, error) {
 	//var resultset [len(c.repository)]domain.Customer
-
-	resultset := make([]domain.Customer, 0)
-	for _, v := range c.repository {
-		resultset = append(resultset, v)
+	if len(c.repository) == 0 {
+		return nil, ErrEmptyRepository
+	} else {
+		resultset := make([]domain.Customer, 0)
+		for _, v := range c.repository {
+			resultset = append(resultset, v)
+		}
+		return resultset, nil
 	}
-	return resultset
 }

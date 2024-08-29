@@ -13,8 +13,8 @@ type Customer struct {
 }
 
 var (
-	ErrCustomerDoesNotExists = errors.New("the customer id is already present")
-	ErrCustomerAlreadyExists = errors.New("the customer is not present")
+	ErrCustomerDoesNotExists = errors.New("the customer does not exist")
+	ErrCustomerAlreadyExists = errors.New("the customer id is already present")
 	ErrKYCError              = errors.New("customer information is not correct")
 )
 
@@ -23,7 +23,7 @@ type CustomerRepository interface {
 	Update(string, Customer) error
 	Delete(string) error
 	GetById(string) (Customer, error)
-	GetAll() []Customer
+	GetAll() ([]Customer, error)
 }
 
 // basic validations
