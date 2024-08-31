@@ -16,6 +16,7 @@ var (
 	ErrCustomerDoesNotExists = errors.New("the customer does not exist")
 	ErrCustomerAlreadyExists = errors.New("the customer id is already present")
 	ErrKYCError              = errors.New("customer information is not correct")
+	ErrEmptyRepository       = errors.New("No data in Customer Repository")
 )
 
 type CustomerRepository interface {

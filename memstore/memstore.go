@@ -2,11 +2,6 @@ package memstore
 
 import (
 	"customerapp/domain"
-	"errors"
-)
-
-var (
-	ErrEmptyRepository = errors.New("No data in Customer Repository")
 )
 
 // CustomerRepository provides memory based local data repository.
@@ -22,23 +17,23 @@ func NewCustomerRepository() *CustomerRepository {
 func (c *CustomerRepository) Create(customer domain.Customer) error {
 	if _, ok := c.repository[customer.ID]; ok {
 		return domain.ErrCustomerAlreadyExists
-	} else {
-		if err := customer.ValidateKYC(); err != nil {
-			return err
-		} else {
-			c.repository[customer.ID] = customer
-		}
 	}
-	return nil
+
+	if err := customer.ValidateKYC(); err != nil {
+		return err
+	} else {
+		c.repository[customer.ID] = customer
+		return nil
+	}
 }
 
 func (c *CustomerRepository) Delete(custid string) error {
 	if _, ok := c.repository[custid]; ok {
 		delete(c.repository, custid)
+		return nil
 	} else {
 		return domain.ErrCustomerDoesNotExists
 	}
-	return nil
 }
 
 func (c *CustomerRepository) Update(custid string, customer domain.Customer) error {
@@ -66,12 +61,12 @@ func (c *CustomerRepository) GetById(custid string) (domain.Customer, error) {
 func (c *CustomerRepository) GetAll() ([]domain.Customer, error) {
 	//var resultset [len(c.repository)]domain.Customer
 	if len(c.repository) == 0 {
-		return nil, ErrEmptyRepository
-	} else {
-		resultset := make([]domain.Customer, 0)
-		for _, v := range c.repository {
-			resultset = append(resultset, v)
-		}
-		return resultset, nil
+		return nil, domain.ErrEmptyRepository
 	}
+
+	resultset := make([]domain.Customer, 0, len(c.repository))
+	for _, v := range c.repository {
+		resultset = append(resultset, v)
+	}
+	return resultset, nil
 }
